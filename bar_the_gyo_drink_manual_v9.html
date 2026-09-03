@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BAR THE GYO DRINK MANUAL</title>
+<style>
+:root{--bg:#f4ecdf;--paper:#fffaf2;--ink:#1c1b19;--muted:#756f66;--line:#d9ccba;--dark:#1c1814}
+*{box-sizing:border-box}
+html,body{overscroll-behavior:none}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+header{position:sticky;top:0;z-index:5;background:#f4ecdff2;border-bottom:1px solid var(--line);padding:10px;display:flex;gap:8px}
+.search{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:13px;font-size:16px;background:#fff}
+.menu{width:48px;border:0;border-radius:12px;background:#191918;color:#fff;font-size:22px}
+main{max-width:820px;margin:auto;padding:14px 12px 90px}
+h1{font-size:20px;margin:4px 0 16px} h2{font-size:17px;margin:20px 0 10px}
+.admin{display:none;gap:8px;align-items:center;flex-wrap:wrap}.admin.show{display:flex}
+.btn{border:0;border-radius:11px;padding:10px 13px;font-weight:700;background:#191918;color:#fff;cursor:pointer}
+.danger{background:#f2d6d0;color:#7b271c}
+.glasses{display:grid;grid-template-columns:repeat(auto-fit,minmax(82px,1fr));gap:8px}
+.glass{border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:10px 5px;text-align:center;cursor:pointer}
+.glass img{width:58px;height:68px;object-fit:contain;display:block;margin:0 auto 5px}
+.glass .emo{font-size:31px;height:68px;display:grid;place-items:center}.glass b{font-size:12px}
+.alpha{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--paper)}
+.row{display:flex;border-top:1px solid var(--line)}.row:first-child{border-top:0}
+.kana{width:42px;background:#eee2d0;padding:12px;text-align:center;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;cursor:pointer}
+.list{display:grid;gap:8px}.card{border:1px solid var(--line);border-radius:13px;background:var(--paper);padding:11px;cursor:pointer}
+.cardTop{display:flex;justify-content:space-between;gap:10px;align-items:center}.cardMain{display:flex;gap:10px;align-items:center;min-width:0}
+.thumb{width:58px;height:58px;object-fit:cover;border-radius:10px;border:1px solid var(--line);flex:0 0 auto}
+.card small{color:var(--muted)}.badge{font-size:11px;background:#eee2d0;border-radius:8px;padding:4px 6px;white-space:nowrap}
+.quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.quicktag{font-size:11px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 7px;font-weight:700}.quicktag.juice{background:#eef6ff}
+.drawer{position:fixed;top:0;right:-330px;width:min(330px,88vw);height:100dvh;background:var(--paper);z-index:20;padding:18px;transition:.2s;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.drawer.open{right:0}body.drawer-open{overflow:hidden;position:fixed;width:100%}.shade{position:fixed;inset:0;background:#0006;display:none;z-index:15}.shade.show{display:block}
+.drawer button{width:100%;padding:13px 4px;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;font-size:15px}
+.modal{position:fixed;inset:0;background:#0007;z-index:30;display:none;align-items:flex-end;justify-content:center}.modal.show{display:flex}
+.sheet{width:min(720px,100%);max-height:94vh;overflow:auto;background:var(--paper);border-radius:22px 22px 0 0;padding:18px}
+.x{float:right;border:0;background:#eee2d0;border-radius:10px;padding:8px 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.info{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px}.info small{display:block;color:var(--muted)}
+.form{display:grid;gap:10px}.form label{font-size:13px;font-weight:700}.form input,.form select,.form textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}.form textarea{min-height:88px}
+.help{font-size:11px;color:var(--muted);font-weight:400;display:block;margin-top:4px}.photoHero{width:100%;max-height:360px;object-fit:cover;border-radius:16px;border:1px solid var(--line);margin:12px 0}.photoPreview{width:100%;max-height:220px;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:8px}
+.glassManage{display:grid;grid-template-columns:1fr 1fr;gap:10px}.glassEdit{border:1px solid var(--line);border-radius:14px;padding:10px;background:#fff}.glassEdit img{width:100%;height:120px;object-fit:contain;background:var(--paper);border-radius:10px;margin-bottom:7px}
+.addGlassBox{border:1px dashed var(--line);border-radius:14px;padding:12px;margin-bottom:14px;background:#fff}
+.glassPair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.grid,.glassPair{grid-template-columns:1fr 1fr}.glassManage{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+<input id="q" class="search" placeholder="ドリンク名・略称・リキュール・割り材で検索">
+<button id="hamb" class="menu">☰</button>
+</header>
+<div id="shade" class="shade"></div>
+<aside id="drawer" class="drawer">
+<button id="close">✕ 閉じる</button>
+<h3>カテゴリー</h3><div id="cats"></div>
+<h3>管理</h3>
+<button id="login">🔒 管理者モード</button>
+<button id="logout" style="display:none">↩ 閲覧モードに戻る</button>
+</aside>
+
+<main>
+<div id="browseArea">
+<h1>BAR THE GYO <small>DRINK MANUAL</small></h1>
+<div id="admin" class="admin">
+<button id="add" class="btn">＋ ドリンク追加</button>
+<button id="glassManageBtn" class="btn">＋ グラス追加・管理</button>
+<small>管理者モード</small>
+</div>
+<h2>グラスから探す</h2>
+<div id="glassHome" class="glasses"></div>
+<h2>リキュール・お酒から探す</h2>
+<div id="alpha" class="alpha"></div>
+</div>
+<h2 id="title">ドリンク一覧</h2>
+<div id="list" class="list"></div>
+</main>
+
+<div id="detail" class="modal"><div class="sheet"><button class="x" onclick="hide('detail')">✕</button><div id="detailBody"></div></div></div>
+
+<div id="edit" class="modal"><div class="sheet">
+<button class="x" onclick="hide('edit')">✕</button><h2 id="editTitle">ドリンク追加</h2>
+<form id="form" class="form">
+<input id="id" type="hidden">
+<label>ドリンク名<input id="name" required></label>
+<label>略称・検索ワード<input id="alias" placeholder="例：カシオレ、レゲパン、クーニャン"></label>
+<label>完成したドリンクの写真<input id="photoFile" type="file" accept="image/*"></label>
+<img id="photoPreview" class="photoPreview" style="display:none"><button type="button" id="removePhoto" class="btn danger" style="display:none">写真を削除</button><input id="photo" type="hidden">
+
+<label>分類
+<select id="category">
+<option>カクテル</option><option>サワー</option><option>ビール</option><option>ビアカクテル</option><option>ウイスキー</option><option>果実酒</option><option>日本酒</option><option>焼酎</option><option>ワイン</option><option>シャンパン</option><option>シードル</option><option>ノンアルコール</option><option>その他</option>
+</select></label>
+
+<div class="glassPair">
+<label>通常時グラス<select id="glass"></select></label>
+<label>飲み放題時グラス<select id="nomihodaiGlass"><option value="">通常時と同じ</option></select></label>
+</div>
+<span class="help">ワインやロックなど、飲み放題のときだけグラスが変わる場合は右側を指定。</span>
+
+<label>ベース / リキュール<input id="liqueur"></label>
+<label>酒の量<input id="amount" placeholder="例 30ml"></label>
+<label>割り材<input id="mixer"></label>
+<label>氷<input id="ice" placeholder="例：あり / なし / いっぱい"></label>
+
+<div class="glassPair">
+<label>レモン / ライム<select id="citrus"><option value="">入れない</option><option>レモン</option><option>ライム</option></select></label>
+<label>扱い<select id="squeeze"><option value="">指定なし</option><option>絞る</option><option>絞らない</option></select></label>
+</div>
+<label>レモン / ライムジュース<select id="juiceType"><option value="">入れない</option><option>レモンジュース</option><option>ライムジュース</option></select></label>
+<label>ジュースの量<input id="juiceAmount" placeholder="例 10ml"></label>
+<label>その他<input id="syrup" placeholder="使わない場合は空欄"></label>
+
+<label>追加材料（通常レシピ・1行1材料）
+<textarea id="ingredients" placeholder="例：ミント 10枚&#10;ライム 1/2個&#10;ガムシロップ 1個"></textarea>
+<span class="help">材料が多いモヒート・生イチゴ系などに使用。空欄なら表示しません。</span>
+</label>
+
+<label style="display:flex;align-items:center;gap:8px;font-size:15px">
+<input id="nonAlcoholCapable" type="checkbox" style="width:auto"> ★ ノンアルコール対応
+</label>
+<div id="naFields" style="display:none;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff">
+  <b>★ ノンアルレシピ</b>
+  <label>ノンアル材料（1行1材料）
+    <textarea id="nonAlcoholIngredients" placeholder="例：ライチシロップ 20ml&#10;ブルーシロップ 10ml&#10;グレープフルーツジュース 適量"></textarea>
+    <span class="help">シロップが複数ある場合も、1行ずつ自由に追加できます。</span>
+  </label>
+  <label>ノンアルの作り方（1行1工程）
+    <textarea id="nonAlcoholSteps"></textarea>
+  </label>
+  <label>ノンアル注意点<textarea id="nonAlcoholNote"></textarea></label>
+</div>
+
+<label>作り方（1行1工程）
+<textarea id="steps" placeholder="例：グラスに氷を入れる&#10;ミントとライムを入れて軽く潰す&#10;ラムを注ぐ&#10;ソーダで満たす"></textarea>
+<span class="help">生いちごミルクやモヒートなど材料・工程が多いものは、ここに詳しく書けば一覧画面はごちゃつきません。</span>
+</label>
+<label>注意点<textarea id="note"></textarea></label>
+<button class="btn">保存</button>
+</form>
+</div></div>
+
+<div id="glassModal" class="modal"><div class="sheet">
+<button class="x" onclick="hide('glassModal')">✕</button><h2>グラス追加・管理</h2>
+<div class="addGlassBox">
+<label><b>新しいグラス名</b><input id="newGlassName" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;margin:7px 0" placeholder="例：ワイン / シャンパン / 飲み放題ロック"></label>
+<label><b>写真</b><input id="newGlassPhoto" type="file" accept="image/*" style="width:100%;margin:7px 0"></label>
+<button id="addGlassBtn" class="btn" type="button">＋ グラスを追加</button>
+</div>
+<div id="glassManage" class="glassManage"></div>
+</div></div>
+
+<script>
+const raw=`カシスオレンジ|カクテル|カシス|カクテル|オレンジジュース
+カシスソーダ|カクテル|カシス|カクテル|ソーダ
+カシスウーロン|カクテル|カシス|カクテル|ウーロン茶
+カシスグレープフルーツ|カクテル|カシス|カクテル|グレープフルーツジュース
+ファジーネーブル|カクテル|ピーチ|カクテル|オレンジジュース
+レゲエパンチ|カクテル|ピーチ|カクテル|ウーロン茶
+カンパリオレンジ|カクテル|カンパリ|カクテル|オレンジジュース
+カンパリグレフル|カクテル|カンパリ|カクテル|グレープフルーツジュース
+カンパリソーダ|カクテル|カンパリ|カクテル|ソーダ
+スプモーニ|カクテル|カンパリ|カクテル|グレープフルーツ/トニック
+ライチウーロン|カクテル|ライチ|カクテル|ウーロン茶
+ライチモーニ|カクテル|ライチ|カクテル|グレープフルーツ/トニック
+ライチコーク|カクテル|ライチ|カクテル|コーラ
+ライチオレンジ|カクテル|ライチ|カクテル|オレンジジュース
+チャイナブルー|カクテル|ライチ|カクテル|グレープフルーツジュース
+サザンオレンジ|カクテル|サザンカンフォート|カクテル|オレンジジュース
+サザングレフル|カクテル|サザンカンフォート|カクテル|グレープフルーツジュース
+サザンジンジャー|カクテル|サザンカンフォート|カクテル|ジンジャーエール
+サザンコーク|カクテル|サザンカンフォート|カクテル|コーラ
+サザントニック|カクテル|サザンカンフォート|カクテル|トニック
+カルアミルク|カクテル|カルーア|ミルク|ミルク
+ベイリーズミルク|カクテル|ベイリーズ|ミルク|ミルク
+アマレットミルク|カクテル|アマレット|ミルク|ミルク
+チョコミルク|カクテル|チョコ|ミルク|ミルク
+イチゴミルク|カクテル|イチゴ|ミルク|ミルク
+ピーチミルク|カクテル|ピーチ|ミルク|ミルク
+カシスミルク|カクテル|カシス|ミルク|ミルク
+抹茶ミルク|カクテル|抹茶|ミルク|ミルク
+ジントニック|カクテル|ジン|カクテル|トニック
+ジンバック|カクテル|ジン|カクテル|ジンジャーエール
+オレンジブロッサム|カクテル|ジン|カクテル|オレンジジュース
+ジンフィズ|カクテル|ジン|カクテル|ソーダ
+ジンライムソーダ|カクテル|ジン|カクテル|ソーダ
+ブルドック|カクテル|ウォッカ|カクテル|グレープフルーツジュース
+モスコミュール|カクテル|ウォッカ|カクテル|ジンジャーエール
+スクリュードライバー|カクテル|ウォッカ|カクテル|オレンジジュース
+ウォッカトニック|カクテル|ウォッカ|カクテル|トニック
+ラムトニック|カクテル|ラム|カクテル|トニック
+ラムコーク|カクテル|ラム|カクテル|コーラ
+ラムバック|カクテル|ラム|カクテル|ジンジャーエール
+ミスティアオレンジ|カクテル|マスカット|カクテル|オレンジジュース
+ミスティアグレフル|カクテル|マスカット|カクテル|グレープフルーツジュース
+ミスティアモーニ|カクテル|マスカット|カクテル|グレープフルーツ/トニック
+ミスティアジンジャー|カクテル|マスカット|カクテル|ジンジャーエール
+ミスティアコーク|カクテル|マスカット|カクテル|コーラ
+ミスティアアップル|カクテル|マスカット|カクテル|りんごジュース
+ミスティアカルピス|カクテル|マスカット|カクテル|カルピス
+ミスティアソーダ|カクテル|マスカット|カクテル|ソーダ
+アマレットオレンジ|カクテル|アマレット|カクテル|オレンジジュース
+アマレットジンジャー|カクテル|アマレット|カクテル|ジンジャーエール
+アマレットモーニ|カクテル|アマレット|カクテル|グレープフルーツ/トニック
+アマレットティー|カクテル|アマレット|カクテル|紅茶
+ミントたっぷりモヒート|カクテル|ラム|カクテル|ソーダ
+生イチゴミルクカクテル|カクテル|イチゴ|ミルク|ミルク
+生イチゴミルクノンアル|ノンアルコール|ノンアル|ミルク|ミルク
+レモンサワー|サワー|焼酎|サワー|ソーダ
+ライムサワー|サワー|焼酎|サワー|ソーダ
+青りんごサワー|サワー|焼酎|サワー|ソーダ
+グレフルサワー|サワー|焼酎|サワー|ソーダ
+メロンサワー|サワー|焼酎|サワー|ソーダ
+カルピスサワー|サワー|焼酎|サワー|ソーダ
+コークハイ|サワー|ウイスキー|サワー|コーラ
+ウーロンハイ|サワー|焼酎|サワー|ウーロン茶
+緑茶ハイ|サワー|焼酎|サワー|緑茶
+グレフルハイ|サワー|焼酎|サワー|グレープフルーツジュース
+トマトハイ|サワー|焼酎|サワー|トマトジュース
+生ビール|ビール|ビール|カクテル|
+THE PERFECT 黒ラベル|ビール|ビール|カクテル|
+コロナ|ビール|ビール|カクテル|
+ハイネケン|ビール|ビール|カクテル|
+ハートランド|ビール|ビール|カクテル|
+バドワイザー|ビール|ビール|カクテル|
+ギネス|ビール|ビール|カクテル|
+サッポロラガービール 赤星|ビール|ビール|カクテル|
+カシスビール|ビアカクテル|カシス|カクテル|ビール
+ピーチビール|ビアカクテル|ピーチ|カクテル|ビール
+レッドアイ|ビアカクテル|ビール|カクテル|トマトジュース
+ディーゼル|ビアカクテル|ビール|カクテル|コーラ
+シャンディガフ|ビアカクテル|ビール|カクテル|ジンジャーエール
+サッポロプレミアムフリー|ノンアルコール|ノンアルビール|カクテル|
+デュワーズ|ウイスキー|ウイスキー|ロック|
+デュワーズ12年|ウイスキー|ウイスキー|ロック|
+角|ウイスキー|ウイスキー|ロック|
+陸|ウイスキー|ウイスキー|ロック|
+ジムビーム|ウイスキー|ウイスキー|ロック|
+ジョニーウォーカー 黒|ウイスキー|ウイスキー|ロック|
+メーカーズマーク|ウイスキー|ウイスキー|ロック|
+ジャックダニエル|ウイスキー|ウイスキー|ロック|
+ラフロイグ|ウイスキー|ウイスキー|ロック|
+梅酒|果実酒|梅酒|ロック|
+あんずソーダ|果実酒|あんず|カクテル|ソーダ
+あんずオレンジ|果実酒|あんず|カクテル|オレンジジュース
+あんずグレフル|果実酒|あんず|カクテル|グレープフルーツジュース
+あんずジンジャー|果実酒|あんず|カクテル|ジンジャーエール
+あんずティー|果実酒|あんず|カクテル|紅茶
+サンタ・リタ ヒーローズ グラス赤|ワイン|赤ワイン|カクテル|
+サンタ・リタ ヒーローズ グラス白|ワイン|白ワイン|カクテル|
+サンタ・リタ ヒーローズ ボトル赤|ワイン|赤ワイン|カクテル|
+サンタ・リタ ヒーローズ ボトル白|ワイン|白ワイン|カクテル|
+熱燗そのままカップ酒|日本酒|日本酒|カクテル|
+津軽じょんがら【本醸造】|日本酒|日本酒|カクテル|
+華一風【特別純米】|日本酒|日本酒|カクテル|
+豊盃【特別純米】|日本酒|日本酒|カクテル|
+麦焼酎|焼酎|麦焼酎|ロック|
+芋焼酎|焼酎|芋焼酎|ロック|
+米焼酎|焼酎|米焼酎|ロック|
+ニッカシードル ドライ|シードル|シードル|カクテル|
+ニッカシードル スイート|シードル|シードル|カクテル|
+モエ・エ・シャンドン ブリュット（白）|シャンパン|シャンパン|カクテル|
+ランソン・ブラックラベル|シャンパン|シャンパン|カクテル|
+ヴーヴ・クリコ イエローラベル|シャンパン|シャンパン|カクテル|
+コーラ|ノンアルコール|ノンアル|カクテル|
+コーラゼロ|ノンアルコール|ノンアル|カクテル|
+ジンジャーエール|ノンアルコール|ノンアル|カクテル|
+メロンソーダ|ノンアルコール|ノンアル|カクテル|
+カルピス|ノンアルコール|ノンアル|カクテル|
+カルピスソーダ|ノンアルコール|ノンアル|カクテル|
+オレンジジュース|ノンアルコール|ノンアル|カクテル|
+りんごジュース|ノンアルコール|ノンアル|カクテル|
+グレープフルーツジュース|ノンアルコール|ノンアル|カクテル|
+トマトジュース|ノンアルコール|ノンアル|カクテル|
+ウーロン茶|ノンアルコール|ノンアル|カクテル|
+緑茶|ノンアルコール|ノンアル|カクテル|
+紅茶 無糖|ノンアルコール|ノンアル|カクテル|`;
+const base=raw.split('\n').filter(Boolean).map((r,i)=>{
+  let a=r.split('|');
+  return{id:i+1,name:a[0],alias:a[0]==='カシスオレンジ'?'カシオレ':a[0]==='レゲエパンチ'?'ピーチウーロン,レゲパン,クーニャン,レゲェパンチ':'',
+  category:a[1],liqueur:a[2],glass:a[3],nomihodaiGlass:'',mixer:a[4],amount:'未入力',ice:'未入力',
+  citrus:'',squeeze:'',syrup:'',juiceType:'',juiceAmount:'',photo:'',steps:['作り方は未入力です'],note:'',
+  ingredients:[],nonAlcoholCapable:["カシスオレンジ","カシスソーダ","カシスウーロン","カシスグレープフルーツ","ファジーネーブル","レゲエパンチ","ライチウーロン","ライチモーニ","ライチコーク","ライチオレンジ","チャイナブルー","アマレットミルク","チョコミルク","イチゴミルク","ピーチミルク","カシスミルク","抹茶ミルク","ジントニック","ミスティアオレンジ","ミスティアグレフル","ミスティアモーニ","ミスティアジンジャー","ミスティアコーク","ミスティアアップル","ミスティアカルピス","ミスティアソーダ","アマレットオレンジ","アマレットジンジャー","アマレットモーニ","アマレットティー","レモンサワー","ライムサワー","青りんごサワー","あんずソーダ","あんずオレンジ","あんずグレフル","あんずジンジャー","あんずティー"].includes(a[0]),nonAlcoholIngredients:[],nonAlcoholSteps:[],nonAlcoholNote:''}
+});
+let drinks=JSON.parse(localStorage.getItem('btg_live_drinks')||'null')||base;
+const printedStars=["カシスオレンジ","カシスソーダ","カシスウーロン","カシスグレープフルーツ","ファジーネーブル","レゲエパンチ","ライチウーロン","ライチモーニ","ライチコーク","ライチオレンジ","チャイナブルー","アマレットミルク","チョコミルク","イチゴミルク","ピーチミルク","カシスミルク","抹茶ミルク","ジントニック","ミスティアオレンジ","ミスティアグレフル","ミスティアモーニ","ミスティアジンジャー","ミスティアコーク","ミスティアアップル","ミスティアカルピス","ミスティアソーダ","アマレットオレンジ","アマレットジンジャー","アマレットモーニ","アマレットティー","レモンサワー","ライムサワー","青りんごサワー","あんずソーダ","あんずオレンジ","あんずグレフル","あんずジンジャー","あんずティー"];
+drinks=drinks.map(d=>({...d,
+  nomihodaiGlass:d.nomihodaiGlass||'',
+  alias:d.alias||((d.name==='カシスオレンジ')?'カシオレ':(d.name==='レゲエパンチ')?'ピーチウーロン,レゲパン,クーニャン,レゲェパンチ':''),
+  ingredients:Array.isArray(d.ingredients)?d.ingredients:[],
+  nonAlcoholCapable:d.nonAlcoholCapable===true||printedStars.includes(d.name),
+  nonAlcoholIngredients:Array.isArray(d.nonAlcoholIngredients)?d.nonAlcoholIngredients:[],
+  nonAlcoholSteps:Array.isArray(d.nonAlcoholSteps)?d.nonAlcoholSteps:[],
+  nonAlcoholNote:d.nonAlcoholNote||''
+}));
+let admin=localStorage.getItem('btg_live_admin')==='1',filter=null;
+
+const defaultGlasses=['ミルク','ロック','サワー','カクテル'];
+let glassTypes=JSON.parse(localStorage.getItem('btg_glass_types')||'null')||defaultGlasses;
+let glassImages=JSON.parse(localStorage.getItem('btg_glass_images')||'{}');
+const glassEmoji={'ミルク':'🥛','ロック':'🥃','サワー':'🍹','カクテル':'🥤'};
+
+const cats=['すべて','カクテル','サワー','ビール','ビアカクテル','ウイスキー','果実酒','日本酒','焼酎','ワイン','シャンパン','シードル','ノンアルコール','その他'];
+const groups=[['あ',['アマレット','ウォッカ','イチゴ']],['か',['カシス','カンパリ','カルーア']],['さ',['サザンカンフォート','ジン','焼酎']],['た',['チョコ']],['は',['ピーチ','ベイリーズ']],['ま',['マスカット','抹茶']],['ら',['ライチ','ラム']]];
+const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const present=v=>v!=null&&String(v).trim()!==''&&String(v).trim()!=='未入力';
+
+function save(){localStorage.setItem('btg_live_drinks',JSON.stringify(drinks))}
+function saveGlasses(){localStorage.setItem('btg_glass_types',JSON.stringify(glassTypes));localStorage.setItem('btg_glass_images',JSON.stringify(glassImages));renderGlasses();refreshGlassSelects()}
+
+function compressImage(file,max=1000,quality=.78){return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=reject;r.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{let w=img.width,h=img.height,s=Math.min(1,max/Math.max(w,h));let c=document.createElement('canvas');c.width=Math.round(w*s);c.height=Math.round(h*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',quality))};img.src=r.result};r.readAsDataURL(file)})}
+
+function citrusData(d){
+  if(present(d.citrus)) return {type:d.citrus,squeeze:present(d.squeeze)?d.squeeze:''};
+  if(present(d.lemon)) return {type:'レモン',squeeze:present(d.squeeze)?d.squeeze:''};
+  if(present(d.lime)) return {type:'ライム',squeeze:present(d.squeeze)?d.squeeze:''};
+  return {type:'',squeeze:''};
+}
+function juiceData(d){
+  if(present(d.juiceType)) return {type:d.juiceType,amount:present(d.juiceAmount)?d.juiceAmount:''};
+  if(present(d.lex)) return {type:'レモンジュース',amount:d.lex};
+  if(present(d.lix)) return {type:'ライムジュース',amount:d.lix};
+  return {type:'',amount:''};
+}
+function quickTags(d){
+  const c=citrusData(d),j=juiceData(d),tags=[];
+  if(c.type){
+    const icon=c.type==='レモン'?'🍋':'🍋‍🟩';
+    const act=c.squeeze==='絞る'?'絞':c.squeeze==='絞らない'?'添':'';
+    tags.push(`<span class="quicktag">${icon}${act}</span>`);
+  }
+  if(j.type){
+    const icon=j.type.includes('レモン')?'🍋':'🍋‍🟩';
+    tags.push(`<span class="quicktag juice">${icon}J</span>`);
+  }
+  return tags.join('');
+}
+
+function renderGlasses(){
+  glassHome.innerHTML=glassTypes.map(g=>`<button class="glass" data-g="${E(g)}">${glassImages[g]?`<img src="${glassImages[g]}" alt="${E(g)}">`:`<div class="emo">${glassEmoji[g]||'🥂'}</div>`}<b>${E(g)}</b></button>`).join('');
+  glassHome.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>setFilter('glass',b.dataset.g));
+}
+function refreshGlassSelects(selected='',selectedN=''){
+  const opts=glassTypes.map(g=>`<option value="${E(g)}">${E(g)}</option>`).join('');
+  glass.innerHTML=opts;
+  nomihodaiGlass.innerHTML='<option value="">通常時と同じ</option>'+opts;
+  if(selected&&glassTypes.includes(selected)) glass.value=selected;
+  if(selectedN&&glassTypes.includes(selectedN)) nomihodaiGlass.value=selectedN;
+}
+
+function render(){
+  let a=[...drinks],query=q.value.trim().toLowerCase().replace(/レゲェ/g,'レゲエ');
+  const searching=!!query;
+  if(query)a=a.filter(d=>JSON.stringify(d).toLowerCase().replace(/レゲェ/g,'レゲエ').includes(query));
+  if(filter){
+    if(filter.t==='cat'&&filter.v!=='すべて')a=a.filter(d=>d.category===filter.v);
+    if(filter.t==='liq')a=a.filter(d=>d.liqueur===filter.v);
+    if(filter.t==='glass')a=a.filter(d=>d.glass===filter.v||d.nomihodaiGlass===filter.v);
+  }
+  a.sort((x,y)=>x.name.localeCompare(y.name,'ja'));
+  browseArea.style.display=searching?'none':'block';
+  title.textContent=searching?`「${q.value.trim()}」の検索結果`:filter?filter.v+' のドリンク':'ドリンク一覧';
+  list.innerHTML=a.map(d=>{
+    const qt=quickTags(d);
+    const glassText=d.nomihodaiGlass?`${d.glass} / 飲放:${d.nomihodaiGlass}`:d.glass;
+    return `<div class="card" onclick="detailOpen(${d.id})"><div class="cardTop"><div class="cardMain">${d.photo?`<img class="thumb" src="${d.photo}" alt="">`:''}<div><b>${d.nonAlcoholCapable?'★ ':''}${E(d.name)}</b><br><small>${E(d.liqueur)} ・ ${E(d.mixer)} ・ ${E(glassText)}</small></div></div><span class="badge">${E(d.category)}</span></div>${qt?`<div class="quick">${qt}</div>`:''}</div>`
+  }).join('')||'<div class="card">該当するドリンクがありません</div>';
+}
+function setFilter(t,v){filter={t,v};render();title.scrollIntoView({behavior:'smooth',block:'start'})}
+
+const catsDiv=document.getElementById('cats'),adminBox=document.getElementById('admin');
+alpha.innerHTML=groups.map(g=>`<div class="row"><div class="kana">${g[0]}</div><div class="chips">${g[1].map(x=>`<button class="chip" onclick="setFilter('liq','${x}')">${x}</button>`).join('')}</div></div>`).join('');
+cats.forEach(c=>{let b=document.createElement('button');b.textContent=c;b.onclick=()=>{setFilter('cat',c);drawerClose()};catsDiv.appendChild(b)});
+
+q.oninput=()=>{filter=null;render();if(q.value.trim())window.scrollTo({top:0,behavior:'auto'})};
+
+let drawerScrollY=0;
+function drawerOpen(){drawerScrollY=window.scrollY;document.body.style.top=`-${drawerScrollY}px`;document.body.classList.add('drawer-open');drawer.classList.add('open');shade.classList.add('show')}
+function drawerClose(){drawer.classList.remove('open');shade.classList.remove('show');document.body.classList.remove('drawer-open');document.body.style.top='';window.scrollTo(0,drawerScrollY)}
+hamb.onclick=drawerOpen;close.onclick=drawerClose;shade.onclick=drawerClose;
+function hide(id){document.getElementById(id).classList.remove('show')}
+
+function detailOpen(idv){
+  const d=drinks.find(x=>x.id===idv),c=citrusData(d),j=juiceData(d);
+  let items=[['酒の量',d.amount],['氷',d.ice],['割り材',d.mixer]];
+  if(c.type)items.push(['レモン / ライム',c.type+(c.squeeze?' ・ '+c.squeeze:'')]);
+  if(j.type)items.push(['レモン / ライムジュース',j.type+(j.amount?' ・ '+j.amount:'')]);
+  if(present(d.syrup))items.push(['その他',d.syrup]);
+  const regularIngredients=(d.ingredients||[]).filter(Boolean);
+  const naIngredients=(d.nonAlcoholIngredients||[]).filter(Boolean);
+  const glassBlock=d.nomihodaiGlass?
+    `<div class="grid" style="margin-top:12px"><div class="info"><small>通常時グラス</small><b>${E(d.glass)}</b></div><div class="info"><small>飲み放題時グラス</small><b>${E(d.nomihodaiGlass)}</b></div></div>`:
+    `<div class="info" style="margin-top:12px"><small>グラス</small><b>${E(d.glass)}</b></div>`;
+  detailBody.innerHTML=`<h2>${d.nonAlcoholCapable?'★ ':''}${E(d.name)}</h2><small>${E(d.category)} / ${E(d.liqueur)}${d.nonAlcoholCapable?'　★ノンアル可':''}</small>${d.photo?`<img class="photoHero" src="${d.photo}" alt="${E(d.name)}">`:''}${glassBlock}<div class="grid" style="margin-top:8px">${items.map(x=>`<div class="info"><small>${x[0]}</small><b>${E(x[1])}</b></div>`).join('')}</div>${regularIngredients.length?`<h3>追加材料</h3><ul>${regularIngredients.map(s=>`<li>${E(s)}</li>`).join('')}</ul>`:''}<h3>作り方</h3><ol>${(d.steps||[]).map(s=>`<li>${E(s)}</li>`).join('')}</ol>${d.note?`<div class="info"><b>注意</b><br>${E(d.note)}</div>`:''}${d.nonAlcoholCapable?`<details style="margin-top:16px;border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px"><summary style="font-weight:800;cursor:pointer">★ ノンアルレシピを見る</summary>${naIngredients.length?`<h3>材料</h3><ul>${naIngredients.map(s=>`<li>${E(s)}</li>`).join('')}</ul>`:'<p><small>材料は未入力です</small></p>'}<h3>作り方</h3>${(d.nonAlcoholSteps||[]).length?`<ol>${d.nonAlcoholSteps.map(s=>`<li>${E(s)}</li>`).join('')}</ol>`:'<p><small>作り方は未入力です</small></p>'}${d.nonAlcoholNote?`<div class="info"><b>注意</b><br>${E(d.nonAlcoholNote)}</div>`:''}</details>`:''}${admin?`<p><button class="btn" onclick="editOpen(${idv})">編集</button> <button class="btn danger" onclick="delDrink(${idv})">削除</button></p>`:''}`;
+  detail.classList.add('show');
+}
+
+function editOpen(idv){
+  let d=idv?drinks.find(x=>x.id===idv):{id:'',name:'',alias:'',photo:'',category:'カクテル',glass:glassTypes[0]||'',nomihodaiGlass:'',liqueur:'',amount:'',mixer:'',ice:'',citrus:'',squeeze:'',syrup:'',juiceType:'',juiceAmount:'',steps:[''],note:'',ingredients:[],nonAlcoholCapable:false,nonAlcoholIngredients:[],nonAlcoholSteps:[],nonAlcoholNote:''};
+  let c=citrusData(d),j=juiceData(d);hide('detail');
+  id.value=d.id||'';name.value=d.name||'';alias.value=d.alias||'';category.value=d.category||'カクテル';
+  refreshGlassSelects(d.glass,d.nomihodaiGlass);
+  liqueur.value=d.liqueur||'';amount.value=d.amount||'';mixer.value=d.mixer||'';ice.value=d.ice||'';syrup.value=present(d.syrup)?d.syrup:'';
+  citrus.value=c.type;squeeze.value=c.squeeze;juiceType.value=j.type;juiceAmount.value=j.amount;
+  note.value=d.note||'';steps.value=(d.steps||[]).join('\n');
+  ingredients.value=(d.ingredients||[]).join('\n');
+  nonAlcoholCapable.checked=!!d.nonAlcoholCapable;
+  nonAlcoholIngredients.value=(d.nonAlcoholIngredients||[]).join('\n');
+  nonAlcoholSteps.value=(d.nonAlcoholSteps||[]).join('\n');
+  nonAlcoholNote.value=d.nonAlcoholNote||'';
+  toggleNAFields();
+  photo.value=d.photo||'';photoPreview.src=d.photo||'';photoPreview.style.display=d.photo?'block':'none';removePhoto.style.display=d.photo?'inline-block':'none';
+  editTitle.textContent=idv?'ドリンク編集':'ドリンク追加';edit.classList.add('show');
+}
+form.onsubmit=e=>{
+  e.preventDefault();
+  let idv=+id.value,o={
+    name:name.value.trim(),alias:alias.value.trim(),photo:photo.value||'',category:category.value,glass:glass.value,nomihodaiGlass:nomihodaiGlass.value,
+    liqueur:liqueur.value.trim(),amount:amount.value.trim(),mixer:mixer.value.trim(),ice:ice.value.trim(),
+    citrus:citrus.value,squeeze:citrus.value?squeeze.value:'',juiceType:juiceType.value,juiceAmount:juiceType.value?juiceAmount.value.trim():'',
+    syrup:syrup.value.trim(),note:note.value.trim(),steps:steps.value.split('\n').map(x=>x.trim()).filter(Boolean),
+    ingredients:ingredients.value.split('\n').map(x=>x.trim()).filter(Boolean),
+    nonAlcoholCapable:nonAlcoholCapable.checked,
+    nonAlcoholIngredients:nonAlcoholCapable.checked?nonAlcoholIngredients.value.split('\n').map(x=>x.trim()).filter(Boolean):[],
+    nonAlcoholSteps:nonAlcoholCapable.checked?nonAlcoholSteps.value.split('\n').map(x=>x.trim()).filter(Boolean):[],
+    nonAlcoholNote:nonAlcoholCapable.checked?nonAlcoholNote.value.trim():'',
+    lemon:'',lime:'',lex:'',lix:''
+  };
+  if(idv){let i=drinks.findIndex(x=>x.id===idv);drinks[i]={...drinks[i],...o}}
+  else{o.id=Math.max(0,...drinks.map(x=>x.id))+1;drinks.push(o)}
+  save();hide('edit');render();
+};
+function delDrink(idv){if(confirm('このドリンクを削除しますか？')){drinks=drinks.filter(x=>x.id!==idv);save();hide('detail');render()}}
+
+function toggleNAFields(){naFields.style.display=nonAlcoholCapable.checked?'grid':'none';naFields.style.gap='10px'}
+nonAlcoholCapable.onchange=toggleNAFields;
+
+photoFile.onchange=async()=>{if(!photoFile.files[0])return;try{photo.value=await compressImage(photoFile.files[0]);photoPreview.src=photo.value;photoPreview.style.display='block';removePhoto.style.display='inline-block'}catch(e){alert('写真を読み込めませんでした')}};
+removePhoto.onclick=()=>{photo.value='';photoPreview.src='';photoPreview.style.display='none';removePhoto.style.display='none';photoFile.value=''};
+
+function openGlassManager(){
+  glassManage.innerHTML=glassTypes.map(g=>`<div class="glassEdit"><b>${E(g)}</b>${glassImages[g]?`<img src="${glassImages[g]}">`:`<div style="height:120px;display:grid;place-items:center;font-size:42px">${glassEmoji[g]||'🥂'}</div>`}<input type="file" accept="image/*" data-photo="${E(g)}"><button class="btn danger" type="button" data-del="${E(g)}" style="width:100%;margin-top:7px">削除</button></div>`).join('');
+  glassManage.querySelectorAll('[data-photo]').forEach(inp=>inp.onchange=async()=>{if(!inp.files[0])return;glassImages[inp.dataset.photo]=await compressImage(inp.files[0],700,.8);saveGlasses();openGlassManager()});
+  glassManage.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{let g=b.dataset.del;if(drinks.some(d=>d.glass===g||d.nomihodaiGlass===g)){alert('このグラスを使っているドリンクがあります。先にドリンク側のグラスを変更してください。');return}if(confirm(`${g}を削除しますか？`)){glassTypes=glassTypes.filter(x=>x!==g);delete glassImages[g];saveGlasses();openGlassManager()}});
+  glassModal.classList.add('show');
+}
+glassManageBtn.onclick=openGlassManager;
+addGlassBtn.onclick=async()=>{
+  const g=newGlassName.value.trim();
+  if(!g)return alert('グラス名を入力してください');
+  if(glassTypes.includes(g))return alert('同じ名前のグラスがあります');
+  glassTypes.push(g);
+  if(newGlassPhoto.files[0])glassImages[g]=await compressImage(newGlassPhoto.files[0],700,.8);
+  newGlassName.value='';newGlassPhoto.value='';saveGlasses();openGlassManager();
+};
+
+function adminUI(){adminBox.classList.toggle('show',admin);login.style.display=admin?'none':'block';logout.style.display=admin?'block':'none'}
+login.onclick=()=>{let p=prompt('管理者パスワード');if(p==='gyo1234'){admin=true;localStorage.setItem('btg_live_admin','1');adminUI();drawerClose()}else if(p!==null)alert('パスワードが違います')};
+logout.onclick=()=>{admin=false;localStorage.removeItem('btg_live_admin');adminUI();drawerClose()};
+add.onclick=()=>editOpen(null);
+
+renderGlasses();refreshGlassSelects();adminUI();render();
+</script>
+</body></html>
