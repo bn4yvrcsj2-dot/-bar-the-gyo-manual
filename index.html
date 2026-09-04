@@ -304,6 +304,7 @@ const cats=['すべて','カクテル','サワー','ビール','ビアカクテ�
 const groups=[['あ',['アマレット','ウォッカ','イチゴ']],['か',['カシス','カンパリ','カルーア']],['さ',['サザンカンフォート','ジン','焼酎']],['た',['チョコ']],['は',['ピーチ','ベイリーズ']],['ま',['マスカット','抹茶']],['ら',['ライチ','ラム']]];
 const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const present=v=>v!=null&&String(v).trim()!==''&&String(v).trim()!=='未入力';
+const nameInput=document.getElementById('name');
 
 function save(){localStorage.setItem('btg_live_drinks',JSON.stringify(drinks))}
 function saveGlasses(){localStorage.setItem('btg_glass_types',JSON.stringify(glassTypes));localStorage.setItem('btg_glass_images',JSON.stringify(glassImages));renderGlasses();refreshGlassSelects()}
@@ -398,7 +399,7 @@ function detailOpen(idv){
 function editOpen(idv){
   let d=idv?drinks.find(x=>x.id===idv):{id:'',name:'',alias:'',photo:'',category:'カクテル',glass:glassTypes[0]||'',nomihodaiGlass:'',liqueur:'',amount:'',mixer:'',ice:'',citrus:'',squeeze:'',syrup:'',juiceType:'',juiceAmount:'',steps:[''],note:'',ingredients:[],nonAlcoholCapable:false,nonAlcoholIngredients:[],nonAlcoholSteps:[],nonAlcoholNote:''};
   let c=citrusData(d),j=juiceData(d);hide('detail');
-  id.value=d.id||'';name.value=d.name||'';alias.value=d.alias||'';category.value=d.category||'カクテル';
+  id.value=d.id||'';nameInput.value=d.name||'';alias.value=d.alias||'';category.value=d.category||'カクテル';
   refreshGlassSelects(d.glass,d.nomihodaiGlass);
   liqueur.value=d.liqueur||'';amount.value=d.amount||'';mixer.value=d.mixer||'';ice.value=d.ice||'';syrup.value=present(d.syrup)?d.syrup:'';
   citrus.value=c.type;squeeze.value=c.squeeze;juiceType.value=j.type;juiceAmount.value=j.amount;
@@ -415,7 +416,7 @@ function editOpen(idv){
 form.onsubmit=e=>{
   e.preventDefault();
   let idv=+id.value,o={
-    name:name.value.trim(),alias:alias.value.trim(),photo:photo.value||'',category:category.value,glass:glass.value,nomihodaiGlass:nomihodaiGlass.value,
+    name:nameInput.value.trim(),alias:alias.value.trim(),photo:photo.value||'',category:category.value,glass:glass.value,nomihodaiGlass:nomihodaiGlass.value,
     liqueur:liqueur.value.trim(),amount:amount.value.trim(),mixer:mixer.value.trim(),ice:ice.value.trim(),
     citrus:citrus.value,squeeze:citrus.value?squeeze.value:'',juiceType:juiceType.value,juiceAmount:juiceType.value?juiceAmount.value.trim():'',
     syrup:syrup.value.trim(),note:note.value.trim(),steps:steps.value.split('\n').map(x=>x.trim()).filter(Boolean),
